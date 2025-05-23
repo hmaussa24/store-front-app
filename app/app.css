@@ -13,3 +13,16 @@ body {
     color-scheme: dark;
   }
 }
+
+@media (max-width: 768px) {
+  .boton-flotante {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    z-index: 50;
+    background-color: #1a202c; /* Tailwind's gray-900 hex value */
+    border: none;
+    border-radius: 0;
+  }
+}

@@ -6,6 +6,7 @@ import {
   Scripts,
   ScrollRestoration,
 } from "react-router";
+import { useNavigate } from "react-router";
 
 import type { Route } from "./+types/root";
 import "./app.css";
@@ -46,6 +47,7 @@ export default function App() {
 }
 
 export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
+  const navigate = useNavigate();
   let message = "Oops!";
   let details = "An unexpected error occurred.";
   let stack: string | undefined;
@@ -62,9 +64,20 @@ export function ErrorBoundary({ error }: Route.ErrorBoundaryProps) {
   }
 
   return (
-    <main className="pt-16 p-4 container mx-auto">
-      <h1>{message}</h1>
-      <p>{details}</p>
+    <main className=" container mx-auto bg-gray-100 min-h-screen flex items-center justify-center px-4">
+      <header className="bg-black py-4 shadow-md fixed top-0 w-full  cursor-pointer">
+        <div className="container mx-auto text-center" onClick={() => navigate('/') }>
+          <h1 className="text-white text-xl font-bold inline-block px-4 py-2 border-2 border-white rounded-lg">
+            CIVICO
+          </h1>
+        </div>
+      </header>
+      {message === "404" && (
+        <div className="flex flex-col items-center justify-center h-screen text-center">
+          <h1 className="text-6xl font-bold text-gray-800 mb-4">404</h1>
+          <p className="text-xl text-gray-600 mb-6">La página que buscas no fue encontrada.</p>
+        </div>
+      )}
       {stack && (
         <pre className="w-full p-4 overflow-x-auto">
           <code>{stack}</code>
