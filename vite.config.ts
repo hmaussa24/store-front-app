@@ -9,5 +9,9 @@ export default defineConfig({
     rollupOptions: {
       external: [],
     },
-  }
+  },
+  base: "/",
+  server: {
+    port: 4000,
+  },
 });
