@@ -60,7 +60,7 @@ export function ConfirmacionTransferencia() {
     }, [id, transactionStatus]);
 
     return (
-        <div className="flex flex-col items-center justify-center h-screen bg-gray-50">
+        <div className="flex text-gray-800 flex-col items-center justify-center h-screen bg-gray-50">
             <header className="bg-black py-4 shadow-md fixed top-0 w-full z-50">
                 <div className="container mx-auto text-center cursor-pointer">
                     <h1 className="text-white text-xl font-bold inline-block px-4 py-2 border-2 border-white rounded-lg">

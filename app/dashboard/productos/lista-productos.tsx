@@ -11,13 +11,13 @@ export function ListaProductos() {
     precioPublico: number;
     descuento: number;
     createdAt: string;
-    tallas:{
+    tallas?:{
             talla: string;
         };
     categorias:{
             nombre: string;
         };
-    colors:{
+    colors?:{
             color: string;
             codigoColor: string;
         };
@@ -95,8 +95,6 @@ export function ListaProductos() {
                     <td className="py-3 px-6 border-b text-gray-800">{producto.codigo}</td>
                     <td className="py-3 px-6 border-b text-gray-800">{producto.nombre}</td>
                     <td className="py-3 px-6 border-b text-gray-800 truncate max-w-xs">{producto.descripcion} </td>
-                    <td className="py-3 px-6 border-b text-gray-800"> Talla {producto.tallas.talla}</td>
-                    <td className="py-3 px-6 border-b text-gray-800"> {producto.colors.color}</td>
                     <td className="py-3 px-6 border-b text-gray-800">{producto.categorias.nombre}</td>
                     <td className="py-3 px-6 border-b text-gray-800">${producto.precioPublico}</td>
                     <td className="py-3 px-6 border-b text-gray-800">{producto.descuento}%</td>

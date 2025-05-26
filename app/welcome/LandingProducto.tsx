@@ -50,6 +50,7 @@ export function LandingProducto() {
   const [talla, setTalla] = useState<number | undefined>();
   const [imagenPrincipal, setImagenPrincipal] = useState<string | null>(null);
   const [errorTalla, setErrorTalla] = useState("");
+  const [color, setColor] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     const fetchProducto = async () => {
@@ -57,6 +58,7 @@ export function LandingProducto() {
         const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/productos/${id}`);
         setProducto(response.data);
         setImagenPrincipal(response.data.imagenes[0].url);
+        setColor(response.data.colors[0].id);
       } catch (error) {
         console.error('Error al obtener el producto:', error);
       }
@@ -69,13 +71,15 @@ export function LandingProducto() {
     setImagenPrincipal(imagen);
   };
 
+  const isSelected = (imagen: string) => imagen === imagenPrincipal;
+
   const handleCompra = () => {
     if (!talla) {
       setErrorTalla("Por favor selecciona una talla antes de continuar.");
       return;
     }
     setErrorTalla("");
-    navigate(`/checkout/${id}/${talla}`);
+    navigate(`/checkout/${id}/${talla}/${color}`);
   };
 
   if (!producto) {
@@ -103,16 +107,18 @@ export function LandingProducto() {
             <div className="absolute top-4 right-4 bg-black text-white text-sm font-bold px-3 py-1 rounded">
               {producto.descuento}% OFF
             </div>
-            <div className="grid grid-cols-5 gap-4">
-              {producto.imagenes.map((img) => (
-                <img
-                  key={img.id}
-                  src={img.url}
-                  alt={`Mini ${img.id}`}
-                  className="w-full h-24 object-contain rounded-md hover:scale-105 transition"
-                  onClick={() => handleMiniaturaClick(img.url)}
-                />
-              ))}
+            <div className="flex align-items-center justify-center mt-4">
+              <div className="grid grid-cols-5 gap-4">
+                {producto.imagenes.map((img) => (
+                  <img
+                    key={img.id}
+                    src={img.url}
+                    alt={`Mini ${img.id}`}
+                    className={`w-full h-24 object-contain rounded-md hover:scale-105 transition ${isSelected(img.url) ? 'border-2 border-gray-800' : ''}`}
+                    onClick={() => handleMiniaturaClick(img.url)}
+                  />
+                ))}
+              </div>
             </div>
           </div>
 
@@ -146,24 +152,32 @@ export function LandingProducto() {
               <div className="flex items-center mt-1">
                 <select id="color" name="color" className="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-black focus:border-gray-300 sm:text-sm rounded-md" onChange={(e) => {
                   const colorBox = document.getElementById('color-box');
-                  if (colorBox) colorBox.style.backgroundColor = e.target.value;
+                  if (colorBox) colorBox.style.backgroundColor = e.target.value.split('-')[0];
+                  setColor(Number(e.target.value.split('-')[1]));
                 }}>
                   {producto.colors.map((color) => (
-                    <option key={color.id} value={color.codigoColor}>
+                    <option key={color.id} value={`${color.codigoColor}-${color.id}`}>
                       {color.color}
                     </option>
                   ))}
                 </select>
-                <div id="color-box" className="w-8 h-8 ml-4 rounded" style={{ backgroundColor: producto.colors.codigoColor }}></div>
+                <div id="color-box" className="w-8 h-8 ml-4 rounded border border-gray-300" style={{ backgroundColor: producto.colors[0]?.codigoColor || 'transparent' }}></div>
               </div>
             </div>
-            <button
+            <div className="flex space-x-2">
+              <button
               onClick={handleCompra}
-              className="bg-black text-white px-6 py-3 rounded-full hover:bg-gray-800 transition"
-            >
+              className="bg-black text-white px-6 py-3 w-full rounded-full hover:bg-gray-800 transition"
+              >
               Comprar ahora
-            </button>
-            <button className="bg-green-500 text-white px-6 py-3 font-semibold rounded-full hover:bg-green-600 transition ml-4" style={{ fontFamily: 'Arial, sans-serif' }} onClick={() => window.open('https://wa.me/1234567890', '_blank')}>Escríbenos</button>
+              </button>
+              <button
+              onClick={handleCompra}
+              className="bg-black text-white px-6 py-3 w-full rounded-full hover:bg-gray-800 transition"
+              >
+              Contra entrega
+              </button>
+            </div>
             <div className="flex justify-center mb-4 mt-5">
               <img src="/envio.jpg" alt="Envíos a todo el país" className="w-42 h-auto rounded" />
               <img src="/logo-wompi.svg" alt="Logo Wompi" className="w-16 h-16" />
@@ -218,17 +232,16 @@ export function LandingProducto() {
 
         {/* Footer con redes */}
         <footer className="bg-black text-white text-center py-6">
-          <p>&copy; 2025 CIVICO. Todos los derechos reservados.</p>
+          <p>&copy; 2025 MEROK. Todos los derechos reservados.</p>
           <div className="mt-2 space-x-4">
-            <a href="#" className="hover:underline">Instagram</a>
-            <a href="#" className="hover:underline">TikTok</a>
+            <a href="https://www.instagram.com/merok_tienda/" className="hover:underline">Instagram</a>
             <a href="#" className="hover:underline">Política de privacidad</a>
           </div>
         </footer>
 
         {/* Botón flotante de WhatsApp */}
         <a
-          href="https://wa.me/573001112233"
+          href="https://wa.me/573137950065?text=Hola%20me%20interesa%20un%20producto%20que%20vi%20en%20su%20página."
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-10 right-4 bg-green-500 hover:bg-green-600 text-white p-2 rounded-full shadow-lg transition"

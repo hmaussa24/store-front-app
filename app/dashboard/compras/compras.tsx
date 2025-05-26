@@ -34,6 +34,10 @@ interface Compra {
     talla: {
         talla: string;
     };
+    color?: {
+        color: string;
+        codigoColor: string;
+    };
 }
 
 export function ListaCompras() {
@@ -96,6 +100,7 @@ export function ListaCompras() {
                             <th className="px-4 py-2 border-b text-left text-sm font-semibold text-gray-600">Cliente</th>
                             <th className="px-4 py-2 border-b text-left text-sm font-semibold text-gray-600">Producto</th>
                             <th className="px-4 py-2 border-b text-left text-sm font-semibold text-gray-600">Talla</th>
+                            <th className="px-4 py-2 border-b text-left text-sm font-semibold text-gray-600">Color</th>
                             <th className="px-4 py-2 border-b text-left text-sm font-semibold text-gray-600">Cantidad</th>
                             <th className="px-4 py-2 border-b text-left text-sm font-semibold text-gray-600">Total</th>
                             <th className="px-4 py-2 border-b text-left text-sm font-semibold text-gray-600">Estado</th>
@@ -114,6 +119,7 @@ export function ListaCompras() {
                                 <td className="px-4 py-2 border-b text-sm text-gray-700">{compra.client.nombre}</td>
                                 <td className="px-4 py-2 border-b text-sm text-gray-700">{compra.producto.nombre}</td>
                                 <td className="px-4 py-2 border-b text-sm text-gray-700">{compra.talla.talla}</td>
+                                <td className="px-4 py-2 border-b text-sm text-gray-700">{compra.color?.color}</td>
                                 <td className="px-4 py-2 border-b text-sm text-gray-700">{compra.cantidad}</td>
                                 <td className="px-4 py-2 border-b text-sm text-gray-700 font-semibold">{formatearPrecioEnCOP(compra.producto.precioPublico * parseInt(compra.cantidad))}</td>
                                 <td className="px-4 py-2 border-b text-sm text-gray-700">
@@ -160,6 +166,7 @@ export function ListaCompras() {
                                 <p className="text-gray-700"><strong>Descripción:</strong> {selectedCompra.producto.descripcion}</p>
                                 <p className="text-gray-700"><strong>Precio:</strong> {formatearPrecioEnCOP(selectedCompra.producto.precioPublico)}</p>
                                 <p className="text-gray-700"><strong>Talla:</strong> {selectedCompra.talla.talla}</p>
+                                <p className="text-gray-700"><strong>Color:</strong> {selectedCompra.color?.color}</p>
                                 <p className="text-gray-700"><strong>Cantidad:</strong> {selectedCompra.cantidad}</p>
                                 <p className="text-gray-700"><strong>Cliente:</strong> {selectedCompra.client.nombre}</p>
                                 <p className="text-gray-700"><strong>Cédula:</strong> {selectedCompra.client.cedula}</p>

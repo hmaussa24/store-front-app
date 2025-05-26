@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router";
 import axios from "axios";
 import { ModalAgregarImagen } from "./agregar-imagen-modal";
 import { ModalAgregarTalla } from "./modal-agregar-talla";
+import { ModalAgregarColor } from "./modal-agregar-color";
 
 export function VerProducto() {
   const { id } = useParams();
@@ -15,7 +16,7 @@ export function VerProducto() {
     precioProveedor: number;
     descuento: number;
     stock: number;
-    colors?: { color: string };
+    colors?: { color: string }[];
     categorias?: { nombre: string };
     tallas?: { talla: string }[];
     imagenes?: { url: string }[];
@@ -108,7 +109,7 @@ export function VerProducto() {
           </div>
           <div className="flex flex-col">
             <h2 className="text-lg font-semibold text-gray-700">Color:</h2>
-            <p className="text-gray-800">{producto.colors?.color}</p>
+            <p className="text-gray-800">{producto.colors?.map(colorObj => colorObj.color).join(", ")}</p>
           </div>
           <div className="flex flex-col">
             <h2 className="text-lg font-semibold text-gray-700">Categoría:</h2>
@@ -138,6 +139,9 @@ export function VerProducto() {
             }
             {
             id && <ModalAgregarTalla onTallaAdded={handleImageAdded} productoId={id} />
+            }
+            {
+            id && <ModalAgregarColor onColorAdded={handleImageAdded} productoId={id} />
             }
           </div>
         </div>

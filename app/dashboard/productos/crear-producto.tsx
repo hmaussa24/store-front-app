@@ -15,52 +15,14 @@ export function CrearProducto() {
     categoriasId: 0,
   });
   const [error, setError] = useState<{ [key: string]: string }>({});
-  const [colores, setColores] = useState<{ id: number; color: string; codigoColor: string }[]>([]);
-  const [tallas, setTallas] = useState<{ id: number; talla: string }[]>([]);
   const [categorias, setCategorias] = useState<{ id: number; nombre: string; codigo: string }[]>([]);
   const navigate = useNavigate();
-
-  useEffect(() => {
-    const fetchColores = async () => {
-      const token = localStorage.getItem("access_token");
-      try {
-        const response = await axios.get("http://localhost:3000/colors", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setColores(response.data);
-      } catch (error) {
-        console.error("Error al obtener los colores:", error);
-      }
-    };
-
-    fetchColores();
-  }, []);
-
-  useEffect(() => {
-    const fetchTallas = async () => {
-      const token = localStorage.getItem("access_token");
-      try {
-        const response = await axios.get("http://localhost:3000/tallas", {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setTallas(response.data);
-      } catch (error) {
-        console.error("Error al obtener las tallas:", error);
-      }
-    };
-
-    fetchTallas();
-  }, []);
 
   useEffect(() => {
     const fetchCategorias = async () => {
       const token = localStorage.getItem("access_token");
       try {
-        const response = await axios.get("http://localhost:3000/categorias", {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/categorias`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -100,9 +62,6 @@ export function CrearProducto() {
     if (formData.stock < 0) {
       errors.stock = "El stock no puede ser negativo.";
     }
-    if (formData.colorsId <= 0) {
-      errors.colorsId = "El ID de color debe ser mayor a 0.";
-    }
     if (formData.categoriasId <= 0) {
       errors.categoriasId = "El ID de categoría debe ser mayor a 0.";
     }
@@ -117,7 +76,7 @@ export function CrearProducto() {
 
     const token = localStorage.getItem("access_token");
     try {
-      await axios.post("http://localhost:3000/productos", formData, {
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/productos`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -235,24 +194,6 @@ export function CrearProducto() {
                 required
               />
             </div>
-          </div>
-          <div>
-            <label htmlFor="colorsId" className="block text-sm font-medium text-gray-700">Color</label>
-            <select
-              id="colorsId"
-              name="colorsId"
-              value={formData.colorsId}
-              onChange={handleChange}
-              className="mt-1 text-gray-700 block w-full border border-gray-300 rounded-md shadow-sm focus:ring-black focus:border-black text-sm p-2"
-              required
-            >
-              <option value="">Seleccione un color</option>
-              {colores.map((color) => (
-                <option key={color.id} value={color.id}>
-                  {color.color} ({color.codigoColor})
-                </option>
-              ))}
-            </select>
           </div>
           <div>
             <label htmlFor="categoriasId" className="block text-sm font-medium text-gray-700">Categoría</label>

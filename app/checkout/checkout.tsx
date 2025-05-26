@@ -76,8 +76,9 @@ export function Checkout() {
   const formRef = useRef(null);
   const [producto, setProducto] = useState<Producto | null>(null);
   const [tallaString, setTalla] = useState<Talla | undefined>();
+  const [colorObj, setColor] = useState<Color | undefined>();
   const [numeroFactura, setNumeroFactura] = useState<string>(uuidv4());
-  const { id, talla } = useParams();
+  const { id, talla, color } = useParams();
   const navigate = useNavigate();
   const [form, setForm] = useState({
     cedula: "",
@@ -134,6 +135,7 @@ export function Checkout() {
           descuento: producto?.descuento,
           productoId: producto?.id,
           tallaId: tallaString?.id,
+          colorId: colorObj?.id,
           metodoPago: metodo,
           direccion: form.direccion,
           departamento: form.departamento,
@@ -158,10 +160,12 @@ export function Checkout() {
       }
     } catch (error) {
       if (error instanceof Yup.ValidationError) {
-        const nuevosErrores = error.inner.reduce((acc, curr) => {
-          acc[curr.path] = curr.message;
+        const nuevosErrores = error.inner.reduce((acc: typeof errores, curr) => {
+          if (curr.path) {
+            acc[curr.path as keyof typeof errores] = curr.message;
+          }
           return acc;
-        }, {});
+        }, { ...errores });
         setErrores(nuevosErrores);
       } else {
         console.error('Error al guardar la compra:', error);
@@ -213,7 +217,20 @@ export function Checkout() {
     };
 
     fetchProducto();
-  }, [id]);
+  }, [talla]);
+
+  useEffect(() => {
+    const fetchProducto = async () => {
+      try {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/colors/${color}`);
+        setColor(response.data);
+      } catch (error) {
+        console.error('Error al obtener el color:', error);
+      }
+    };
+
+    fetchProducto();
+  }, [color]);
 
   useEffect(() => {
     if (numeroFactura && producto) {
@@ -321,6 +338,13 @@ export function Checkout() {
 
                 <p className="font-medium">{tallaString?.talla || "Sin talla seleccionada"}</p>
               </div>
+              <div className="border-t border-gray-300 pt-4 mb-2">
+                <p className="text-sm text-gray-600">Color:</p>
+                <div className="flex items-center">
+                  <div className="font-medium">{colorObj?.color || "Sin color seleccionado"}</div>
+                  <div id="color-box" className="w-8 h-8 ml-4 rounded border border-gray-300" style={{ backgroundColor: colorObj?.codigoColor || 'transparent' }}></div>
+                </div>
+              </div>
               <div className="border-t border-gray-300 pt-4">
                 <p className="text-sm text-gray-600">Precio unitario:</p>
                 <div className="flex items-center space-x-2">
@@ -392,17 +416,16 @@ export function Checkout() {
         </div>
         {/* Footer con redes */}
         <footer className="bg-black text-white text-center py-6">
-          <p>&copy; 2025 CIVICO. Todos los derechos reservados.</p>
+          <p>&copy; 2025 MEROK. Todos los derechos reservados.</p>
           <div className="mt-2 space-x-4">
-            <a href="#" className="hover:underline">Instagram</a>
-            <a href="#" className="hover:underline">TikTok</a>
+            <a href="https://www.instagram.com/merok_tienda/" className="hover:underline">Instagram</a>
             <a href="#" className="hover:underline">Política de privacidad</a>
           </div>
         </footer>
 
         {/* Botón flotante de WhatsApp */}
         <a
-          href="https://wa.me/573001112233"
+          href="https://wa.me/573137950065?text=Hola%20me%20interesa%20un%20producto%20que%20vi%20en%20su%20página."
           target="_blank"
           rel="noopener noreferrer"
           className="fixed bottom-15 right-4 bg-green-500 hover:bg-green-600 text-white p-2 rounded-full shadow-lg transition"
