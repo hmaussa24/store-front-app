@@ -1,7 +1,7 @@
 module.exports = {
   apps: [
     {
-      name: 'store-back',
+      name: 'store-front',
       script: './build/server/index.js',
       env: {
         NODE_ENV: 'development',
